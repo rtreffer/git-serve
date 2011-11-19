@@ -5,6 +5,7 @@ import collection.JavaConversions._
 import org.apache.sshd.SshServer
 import org.apache.sshd.server.kex._
 import org.apache.sshd.common.mac._
+import org.apache.sshd.common._
 import org.apache.sshd.common.Cipher
 import org.apache.sshd.common.random.SingletonRandomFactory
 import org.apache.sshd.common.random.BouncyCastleRandom
@@ -15,6 +16,7 @@ import org.apache.sshd.server.channel.ChannelDirectTcpip
 import org.apache.sshd.common.signature.SignatureDSA
 import org.apache.sshd.common.signature.SignatureRSA
 import org.apache.sshd.server.keyprovider.PEMGeneratorHostKeyProvider;
+import org.apache.sshd.common.NamedFactory
 
 object Server {
 
@@ -53,6 +55,12 @@ object Server {
 
     setUpDefaultCiphers(sshd)
 
+    val kexList = new java.util.ArrayList[NamedFactory[org.apache.sshd.common.KeyExchange]]
+    kexList.add(new DHG14.Factory)
+    kexList.add(new DHG1.Factory)
+    sshd.setKeyExchangeFactories(kexList)
+
+    sshd.setPasswordAuthenticator(new AnyPasswordAuth)
     sshd.setPublickeyAuthenticator(new UserDBPublickeyAuthenticator)
     sshd.setFileSystemFactory(new RepositoryFileSystemFactory)
     sshd.setCommandFactory(new GitCommandFactory)
