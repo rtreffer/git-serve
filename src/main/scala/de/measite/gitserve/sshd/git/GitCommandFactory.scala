@@ -9,18 +9,16 @@ import org.eclipse.jgit.storage.file.FileRepository
 import command._
 import java.io.File
 
-class GitCommandFactory extends CommandFactory {
-
-    val repoPath = new File("./.git").getCanonicalFile
+class GitCommandFactory(repoDir : File) extends CommandFactory {
 
     override def createCommand(command: String) : Command = {
         System.out.println(command)
         if (command.startsWith("git-upload-pack ")) {
-            val repository = new FileRepository(repoPath)
+            val repository = new FileRepository(repoDir)
             return new GitUploadPack(repository)
         }
         if (command.startsWith("git-receive-pack ")) {
-            val repository = new FileRepository(repoPath)
+            val repository = new FileRepository(repoDir)
             return new GitReceivePack(repository)
         }
         System.out.println("error command")

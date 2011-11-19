@@ -21,7 +21,7 @@ import org.apache.sshd.server.keyprovider.PEMGeneratorHostKeyProvider;
 import org.apache.sshd.common.NamedFactory
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 
-object Server {
+class Server(repoDir : File) {
 
     SecurityUtils.getSecurityProvider
 
@@ -68,7 +68,7 @@ object Server {
     sshd.setPasswordAuthenticator(new AnyPasswordAuth)
     sshd.setPublickeyAuthenticator(new UserDBPublickeyAuthenticator)
     sshd.setFileSystemFactory(new RepositoryFileSystemFactory)
-    sshd.setCommandFactory(new GitCommandFactory)
+    sshd.setCommandFactory(new GitCommandFactory(repoDir))
 
     sshd.setPort(2222)
     sshd.start
