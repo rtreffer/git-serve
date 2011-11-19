@@ -7,6 +7,7 @@ import org.apache.sshd.SshServer
 import org.apache.sshd.server.kex._
 import org.apache.sshd.common.mac._
 import org.apache.sshd.common._
+import org.apache.sshd.common.util._
 import org.apache.sshd.common.Cipher
 import org.apache.sshd.common.random.SingletonRandomFactory
 import org.apache.sshd.common.random.BouncyCastleRandom
@@ -22,7 +23,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider
 
 object Server {
 
-    java.security.Security.insertProviderAt(new BouncyCastleProvider, 0)
+    SecurityUtils.getSecurityProvider
 
     val sshd = new SshServer()
 
@@ -80,7 +81,8 @@ object Server {
             new TripleDESCBC.Factory(),
             new BlowfishCBC.Factory(),
             new AES192CBC.Factory(),
-            new AES256CBC.Factory()
+            new AES256CBC.Factory(),
+            new CipherNone.Factory()
         )
 
         val workingCiphers = ciphers.filter(factory => {
