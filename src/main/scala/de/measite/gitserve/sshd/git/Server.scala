@@ -17,8 +17,11 @@ import org.apache.sshd.common.signature.SignatureDSA
 import org.apache.sshd.common.signature.SignatureRSA
 import org.apache.sshd.server.keyprovider.PEMGeneratorHostKeyProvider;
 import org.apache.sshd.common.NamedFactory
+import org.bouncycastle.jce.provider.BouncyCastleProvider
 
 object Server {
+
+    java.security.Security.addProvider(new BouncyCastleProvider)
 
     val sshd = new SshServer()
 
@@ -56,8 +59,8 @@ object Server {
     setUpDefaultCiphers(sshd)
 
     val kexList = new java.util.ArrayList[NamedFactory[org.apache.sshd.common.KeyExchange]]
-    kexList.add(new DHG14.Factory)
     kexList.add(new DHG1.Factory)
+    kexList.add(new DHG14.Factory)
     sshd.setKeyExchangeFactories(kexList)
 
     sshd.setPasswordAuthenticator(new AnyPasswordAuth)
