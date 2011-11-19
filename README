@@ -1,0 +1,3 @@
+git clone git://github.com/rtreffer/smack.git
+mvn install
+java -jar target/gitserve-0.0.1-SNAPSHOT-jar-with-dependencies.jar
