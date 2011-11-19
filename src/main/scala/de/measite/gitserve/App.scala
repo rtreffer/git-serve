@@ -16,12 +16,12 @@ object App {
                     copy(new File(src, f), new File(dst, f))
                 }
             })
-        } else {
+        } else if (src.isFile) {
             val in = new FileInputStream(src)
             val out = new FileOutputStream(dst)
-            in.getChannel.transferTo(0, Long.MaxValue, out.getChannel)
-            in.close
-            out.close
+            val inc = in.getChannel
+            val outc = out.getChannel
+            inc.transferTo(0, Long.MaxValue, outc)
             dst.deleteOnExit
         }
     }
