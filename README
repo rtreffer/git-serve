@@ -3,4 +3,4 @@
 git clone git://github.com/rtreffer/git-serve.git
 cd git-serve
 mvn install
-./git-serve
+java -jar gitserve.jar
