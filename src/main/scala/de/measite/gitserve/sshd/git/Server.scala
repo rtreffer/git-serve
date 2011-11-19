@@ -93,10 +93,12 @@ object Server {
                 )
                 true
             } catch {
-                case _ => false
+                case e => e.printStackTrace; false
             }
         })
 
+        System.out.println("sshd ciphers: " +
+            workingCiphers.map(c => c.getName()).mkString(","))
         sshd.setCipherFactories(workingCiphers);
     }
 
