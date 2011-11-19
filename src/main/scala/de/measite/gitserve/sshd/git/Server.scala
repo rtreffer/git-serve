@@ -21,14 +21,14 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider
 
 object Server {
 
-    java.security.Security.addProvider(new BouncyCastleProvider)
+    java.security.Security.insertProviderAt(new BouncyCastleProvider, 0)
 
     val sshd = new SshServer()
 
     // Security settings
     sshd.setKeyExchangeFactories(List(
-        new DHG14.Factory(),
-        new DHG1.Factory()
+        new DHG1.Factory(),
+        new DHG14.Factory()
     ))
     sshd.setRandomFactory(
         new SingletonRandomFactory(new BouncyCastleRandom.Factory())
@@ -57,11 +57,6 @@ object Server {
     ));
 
     setUpDefaultCiphers(sshd)
-
-    val kexList = new java.util.ArrayList[NamedFactory[org.apache.sshd.common.KeyExchange]]
-    kexList.add(new DHG1.Factory)
-    kexList.add(new DHG14.Factory)
-    sshd.setKeyExchangeFactories(kexList)
 
     sshd.setPasswordAuthenticator(new AnyPasswordAuth)
     sshd.setPublickeyAuthenticator(new UserDBPublickeyAuthenticator)
