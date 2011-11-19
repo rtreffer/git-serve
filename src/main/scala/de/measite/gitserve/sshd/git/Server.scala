@@ -1,6 +1,7 @@
 package de.measite.gitserve.sshd.git
 
 import java.util.Arrays
+import java.io.File
 import collection.JavaConversions._
 import org.apache.sshd.SshServer
 import org.apache.sshd.server.kex._
@@ -33,7 +34,12 @@ object Server {
     sshd.setRandomFactory(
         new SingletonRandomFactory(new BouncyCastleRandom.Factory())
     );
-    sshd.setKeyPairProvider(new PEMGeneratorHostKeyProvider("key.pem"));
+    val sshDir = new File(new File(System.getProperty("user.home", ".")), ".ssh")
+    if (!sshDir.exists) {
+        sshDir.mkdir
+    }
+    sshd.setKeyPairProvider(new PEMGeneratorHostKeyProvider(
+        new File(sshDir, "ssh-serve-key.pem").toString));
 
     sshd.setCompressionFactories(List(
         new CompressionZlib.Factory(),
